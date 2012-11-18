@@ -87,6 +87,7 @@ int main(int argc, char *argv[], char *window_name)
   cout << "Processing video with" << number_frames << "frames." << endl;
 
   const string NAME = "saved_video.avi";
+  //int ex = 0; // CV_FOURCC('D','I','V','X');
   int ex = CV_FOURCC('D','I','V','X');
   
   // Transform from int to char via Bitwise operators
