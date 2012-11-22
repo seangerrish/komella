@@ -40,9 +40,7 @@ class StreamProcessor {
 
   thread* thread_feature_extractor_;
 
-  OutputStream* thread_output_stream_;
-
-  Mat* background_image_;
+  OutputStream* output_stream_;
 
   Pose* pose_;
   

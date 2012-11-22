@@ -25,11 +25,11 @@ target_link_libraries( video_write_webcam ${OpenCV_LIBS} )
 
 project( komella )
 find_package( OpenCV REQUIRED )
-find_package( Boost REQUIRED )
 include_directories( $CMAKE_INCLUDE_PATH )
-include_directories( ${Boost_INCLUDE_DIR} )
 include_directories( /home/sgerrish/insight/komella/code )
 add_executable( komella demo/demo.cpp time_series_state/stream_processor.cpp )
-target_link_libraries( komella )
-#find_package( Boost REQUIRED )
-#include_directories( ${Boost_INCLUDE_DIR} )
+find_package(Boost REQUIRED)
+target_link_libraries( komella
+  ${OpenCV_LIBS}
+  "/usr/lib/libboost_thread.so"
+)

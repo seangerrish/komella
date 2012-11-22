@@ -13,33 +13,21 @@
 using namespace std;
 using namespace cv;
 
-void help() {
-    cout
-        << "\n--------------------------------------------------------------------------" << endl
-        << "This program shows how to write video files. You can extract the R or G or B color channel "
-        << " of the input video.write "  << endl
-        << "Usage:"                                                               << endl
-        << "./video-write inputvideoName [ R | G | B] [Y | N]"                   << endl
-        << "--------------------------------------------------------------------------"   << endl
-        << endl;
-}
-
 void CaptureWebcam(Mat** frames, int* number_frames) {
     CvCapture* capture = NULL;
-    Mat frame, frameCopy, image;
+    Mat frame, frameCopy;
 
     *frames = new Mat[100];
     *number_frames = 100;
 
-    // 0=default, -1=any camera, 1..99=your camera
     capture = cvCaptureFromCAM( CV_CAP_ANY );
     if (!capture) {
       cout << "No camera detected" << endl;
     }
     
-    cvNamedWindow("result", CV_WINDOW_AUTOSIZE);
-    
-    const int MAX_FRAMES = 50;
+    cvNamedWindow("one", CV_WINDOW_AUTOSIZE);
+
+    const int MAX_FRAMES = 100000;
     if (capture) {
       cout << "In capture ..." << endl;
       for(int i=0; i < MAX_FRAMES; ++i) {
@@ -50,31 +38,37 @@ void CaptureWebcam(Mat** frames, int* number_frames) {
 	frame = iplImg;
 	frame.copyTo((*frames)[i]);
 
-	if( frame.empty() ) {
+	if (frame.empty()) {
 	  break;
 	}
 	
-	if( iplImg->origin == IPL_ORIGIN_TL ) {
-	  frame.copyTo(frameCopy);
-	} else {
-	  flip(frame, frameCopy, 0);
-	}
-
-	cvShowImage( "result", iplImg );
+	cvShowImage( "one", iplImg );
 	
-	if( waitKey( 10 ) >= 0 ) {
+	if( waitKey( 2 ) >= 0 ) {
 	  break;
 	  *number_frames = i;
 	}
       }
       
     }
+    return;
+
     cvReleaseCapture( &capture );
-    cvDestroyWindow( "result" );
+    cvDestroyWindow( "one" );
 }
 
 int main(int argc, char *argv[], char *window_name)
 {
+  /*
+  CvCapture* capture = NULL;
+  capture = cvCaptureFromCAM( CV_CAP_ANY );
+  IplImage* iplImg = cvQueryFrame( capture );
+  cvShowImage( "bow", iplImg );
+  cvReleaseCapture( &capture );
+  sleep(3);
+  cvDestroyWindow( "bow" );
+  exit(0);
+  */
   int number_frames = 0;
   Mat* frames = NULL;
   CaptureWebcam(&frames, &number_frames);
@@ -95,11 +89,7 @@ int main(int argc, char *argv[], char *window_name)
 
   // Open the output
   VideoWriter outputVideo;
-  outputVideo.open(NAME.c_str(), ex=ex, 30 /* fps */, frames[0].size(), true);
-  cout << "name" << NAME << endl;
-  cout << "ex" << " " << ex << endl;
-  cout << "frames[0].size()" << frames[0].size() << endl;
-
+  outputVideo.open(NAME.c_str(), ex=ex, 12 /* fps */, frames[0].size(), true);
   if (!outputVideo.isOpened()) {
     cout  << "Could not open the output video for write." << endl;
     return -1;

@@ -12,28 +12,24 @@ namespace komella {
     thread_pose_(new thread()),
     thread_feature_extractor_(new thread()),
     thread_input_stream_(input_stream),
-    thread_output_stream_(output_stream) {
+    output_stream_(output_stream) {
 }
 
 void StreamProcessor::Start() {
   if (!initialized_) {
     InitializeState();
   }
-  
-  for (int i = 0; i < 100; ++i) {
+
+  for (int i = 0; i < 1000; ++i) {
     // Fetch the most-recent image.
-    Frame most_recent_frame = thread_input_stream_->GetLastFrame();
-
-    // Update model parameters.
-    // TODO(sean)
-
-    // Prepare output.
-    
+    usleep(1000000 / 32);
+    Frame* most_recent_frame = thread_input_stream_->GetLastFrame();
+    if (!most_recent_frame) {
+      continue;
+    }
 
     // Output to the output stream.
-    (*output_stream_) << most_recent_frame;
-
-    // Save to disk.
+    (*output_stream_) << most_recent_frame->second;
   }
 
 }
@@ -50,13 +46,11 @@ void StreamProcessor::InitializeState() {
 void StreamProcessor::FindBackgroundImage(InputStream* input) {
   delete background_image_;
   background_image_ = new Mat;
-  (*input_stream_)[0]->second->copyTo(background_image_);
+  (*thread_input_stream_)[0].second->copyTo(*background_image_);
 }
 
 void StreamProcessor::FindSilhouette(Silhouette* silhouette) {
-  for () {
-    
-  }
+  
 }
 
 void StreamProcessor::EstimateGradients() {
