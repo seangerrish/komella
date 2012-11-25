@@ -27,7 +27,8 @@ project( komella )
 find_package( OpenCV REQUIRED )
 include_directories( $CMAKE_INCLUDE_PATH )
 include_directories( /home/sgerrish/insight/komella/code )
-add_executable( komella demo/demo.cpp time_series_state/stream_processor.cpp )
+add_executable( komella demo/demo.cpp time_series_state/stream_processor.cpp layout/layout_constructor.cpp )
+#add_executable( komella demo/demo.cpp time_series_state/stream_processor.cpp )
 find_package(Boost REQUIRED)
 target_link_libraries( komella
   ${OpenCV_LIBS}

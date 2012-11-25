@@ -5,6 +5,7 @@
 
 //class Thread;
 #include "stream.h"
+#include "layout/layout_constructor.h"
 #include <boost/thread.hpp>
 
 using boost::thread;
@@ -12,7 +13,6 @@ using boost::thread;
 namespace komella {
 
 class Pose;
-
 class Inference;
 class Hypothesis;
 
@@ -23,14 +23,30 @@ class StreamProcessor {
   StreamProcessor(InputStream* input_stream,
 		  OutputStream* output_stream);
 
+  ~StreamProcessor();
+
   void Start();
 
   void InitializeState();
 
+  // Sets the background image using the back of frames_;
+  // Returns true if successful.
+  bool SetBackgroundImage();
+
+  bool HandleOneImage(Pose* last_pose,
+		      Pose** new_pose,
+		      Mat** foreground_image_);
+
  private:
   bool initialized_;
   
-  Mat* background_image_;
+  // Manages the background image.
+  Background* background_;
+
+  // Saved as long as the image is displayed.
+  Mat* foreground_image_;
+
+  Mat* smoothed_image_;
 
   thread* thread_image_;
 
@@ -44,10 +60,6 @@ class StreamProcessor {
 
   Pose* pose_;
   
-  void FindBackgroundImage(InputStream* input);
-
-  void FindSilhouette(Silhouette* silhouette);
-
   void EstimateGradients();
 };
 

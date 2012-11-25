@@ -33,9 +33,9 @@ class InputStream : public thread {
     int count = 1;
     boost::this_thread::interruption_enabled();
     while (true) {
-      if (count % 100000 == 0) {
-	printf("count...%d, %d\n", count, *active);
-      }
+      //if (count % 100000 == 0) {
+	//printf("count...%d, %d\n", count, *active);
+      //}
       count += 1;
       if (boost::this_thread::interruption_requested()) {
 	printf("internal thread halting.\n");
@@ -128,6 +128,10 @@ class InputStream : public thread {
     active_ = true;
   }
 
+  int size() {
+    return frames_->size();
+  }
+
  private:
   boost::mutex lock_;
 
@@ -163,7 +167,6 @@ class OutputStream {
     if( waitKey( 2 ) >= 0 ) {
       return;
     }
-
   }
 
  private:
@@ -173,8 +176,6 @@ class OutputStream {
   IplImage displayed_image_;
 
   // A vector with time millis and Mat*s.
-  FrameList* frames_;
-
 };
 
 
